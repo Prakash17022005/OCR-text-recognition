@@ -23,6 +23,7 @@ def process_image(image_path):
 
     # Step 4: Convert the image to RGB format (necessary for EasyOCR)
     image_rgb = cv2.cvtColor(resized_image, cv2.COLOR_BGR2RGB)
+    
 
     # Step 5: Perform text recognition
     result = reader.readtext(image_rgb)
@@ -62,9 +63,25 @@ def process_image(image_path):
     plt.show()
     
     root.mainloop()
+    
+ 
+# Preprocessing the Image
+# Preprocessing the image before feeding it to the OCR model can significantly improve accuracy by making the text clearer.
+def preprocess_image(image_path):
+        
+    image=cv2.imread(image_path,cv2.IMREAD_GRAYSCALE)
+    
+    image=cv2.GaussianBlur(image,(5,5),0)
+    
+    image=cv2.adaptiveThreshold(image,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)
+    
+    return image
 
 # Example usage (replace 'path_to_image.jpg' with your image path)
 image_path=filedialog.askopenfilename(title="Select an image",filetype=[("Image files","*.jpg *.png *.jpeg")])
 
 if image_path:
-    process_image(image_path)
+    
+    preprocessed_image = preprocess_image('image_path')
+    
+    process_image(preprocessed_image)
